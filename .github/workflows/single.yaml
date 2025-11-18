@@ -14,7 +14,7 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Print srodo
-        run: echo "srodowisko: ${{ github.event.inputs.environment }}"
+        run: echo "sro = ${{ github.event.inputs.environment }}"
 
       - name: Print ENV
         run: echo "ENVVAL = $ENV"
