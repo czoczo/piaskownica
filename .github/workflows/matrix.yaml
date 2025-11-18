@@ -1,0 +1,21 @@
+name: Iterate Environments
+
+on:
+  workflow_dispatch:
+
+jobs:
+  print-vars:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [env1, env2]   # Add all your environment names here
+    environment: ${{ matrix.environment }}
+    steps:
+      - name: Print ENV (from environment vars)
+        run: echo "ENV=${{ vars.ENV }}"
+
+      - name: Print SECRET (base64 encoded)
+        run: echo "SECRET=$(echo $SECRET | base64)"
+        env:
+          SECRET: ${{ secrets.SECRET }}
+
