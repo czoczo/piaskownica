@@ -1,0 +1,23 @@
+name: Print ENV and SECRET
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment value"
+        required: true
+        default: "development"
+
+jobs:
+  print-vars:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print ENV
+        run: echo "ENV=${{ github.event.inputs.environment }}"
+
+      - name: Print SECRET (base64 encoded)
+        run: echo "SECRET=$(echo $SECRET | base64)"
+        env:
+          SECRET: ${{ secrets.SECRET }}
+
+
