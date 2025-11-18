@@ -17,7 +17,7 @@ jobs:
         run: echo "sro = ${{ github.event.inputs.environment }}"
 
       - name: Print ENV
-        run: echo "ENVVAL = $ENV"
+        run: echo "ENVVAL = ${{ vars.ENV }}"
 
       - name: Print SECRET (base64 encoded)
         run: echo "SECRET=$(echo $SECRET | base64)"
