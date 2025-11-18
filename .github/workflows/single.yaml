@@ -13,8 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     environment: ${{ github.event.inputs.environment }}
     steps:
-      - name: Print ENV
+      - name: Print środo
         run: echo "Środowisko: ${{ github.event.inputs.environment }}"
+
+      - name: Print ENV
         run: echo "ENVVAL = $ENV"
 
       - name: Print SECRET (base64 encoded)
