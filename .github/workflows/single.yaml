@@ -11,9 +11,11 @@ on:
 jobs:
   print-vars:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
     steps:
       - name: Print ENV
-        run: echo "ENV=${{ github.event.inputs.environment }}"
+        run: echo "Środowisko: ${{ github.event.inputs.environment }}"
+        run: echo "ENVVAL = $ENV"
 
       - name: Print SECRET (base64 encoded)
         run: echo "SECRET=$(echo $SECRET | base64)"
