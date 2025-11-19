@@ -4,6 +4,17 @@ on:
   workflow_dispatch:
 
 jobs:
+  dzioblan:
+    runs-on: ubuntu-latest
+    outputs:
+      environments: ${{ steps.get-envs.outputs.matrix }}
+    steps:
+      - id: get-envs
+        run: |
+          # Get all environments from your repo
+          echo "test"
+          ENVS='["dev","staging","prod","qa","uat"]'
+          echo "matrix=$ENVS" >> $GITHUB_OUTPUT
   print-vars:
     runs-on: ubuntu-latest
     strategy:
