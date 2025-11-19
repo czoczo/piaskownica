@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        environment: ${{ fromJSON(needs.setup.outputs.environments) }}
+        environment: [env1, env2]
     runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
 
@@ -23,24 +23,25 @@ jobs:
         env:
           SECRET: ${{ secrets.SECRET }}
 
-  # Generate environment list dynamically
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      environments: ${{ steps.get-envs.outputs.matrix }}
-    steps:
-      - id: get-envs
-        run: |
-          # Get all environments from your repo
-          ENVS='["env1","env2"]'
-          echo "matrix=$ENVS" >> $GITHUB_OUTPUT
+  ## Generate environment list dynamically
+  #setup:
+  #  runs-on: ubuntu-latest
+  #  outputs:
+  #    environments: ${{ steps.get-envs.outputs.matrix }}
+  #  steps:
+  #    - id: get-envs
+  #      run: |
+  #        # Get all environments from your repo
+  #        ENVS='["env1","env2"]'
+  #        echo "matrix=$ENVS" >> $GITHUB_OUTPUT
 
   # Approval job runs in parallel
   approve-deployments:
-    needs: setup
+    #needs: setup
     strategy:
       matrix:
-        environment: ${{ fromJSON(needs.setup.outputs.environments) }}
+        #environment: ${{ fromJSON(needs.setup.outputs.environments) }}
+        environment: [env1, env2]
     runs-on: ubuntu-latest
     steps:
       - name: Wait and Auto-Approve
