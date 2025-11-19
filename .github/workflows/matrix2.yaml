@@ -51,7 +51,7 @@ jobs:
 
 
   print-vars:
-    needs: [setup, approve-deployments]
+    #needs: [setup, approve-deployments]
     strategy:
       fail-fast: false
       matrix:
