@@ -13,8 +13,6 @@ jobs:
       - id: get-envs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #env:
-        #  GH_TOKEN: ${{ secrets.ADMIN_PAT }}
         run: |
           # Get all environments from your repo
           ENVS=$(gh api repos/${{ github.repository }}/environments --jq '[.environments[].name]' | tr -d ' ')
@@ -42,10 +40,14 @@ jobs:
   approve-deployments:
     needs: setup
     runs-on: ubuntu-latest
+    permissions:
+      deployments: write
     steps:
       - name: Wait and Auto-Approve
+        #env:
+        #  GH_TOKEN: ${{ secrets.APPROVAL_PAT }}
         env:
-          GH_TOKEN: ${{ secrets.APPROVAL_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Wait for deployment to be pending
           sleep 10
