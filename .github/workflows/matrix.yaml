@@ -4,23 +4,30 @@ on:
   workflow_dispatch:
 
 jobs:
-  dzioblan:
+  # Generate environment list dynamically
+  setup:
     runs-on: ubuntu-latest
     outputs:
       environments: ${{ steps.get-envs.outputs.matrix }}
     steps:
       - id: get-envs
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_PAT }}
         run: |
           # Get all environments from your repo
-          echo "test"
-          ENVS='["dev","staging","prod","qa","uat"]'
+          ENVS=$(gh api repos/${{ github.repository }}/environments --jq '[.environments[].name]' | tr -d ' ')
+          echo "Found envs: $ENVS"
           echo "matrix=$ENVS" >> $GITHUB_OUTPUT
-  print-vars:
-    runs-on: ubuntu-latest
+
+  main-task-print-vars:
+    needs: setup
     strategy:
+      fail-fast: false
       matrix:
-        environment: [env1, env2]   # Add all your environment names here
+        environment: ${{ fromJSON(needs.setup.outputs.environments) }}
+    runs-on: ubuntu-latest
     environment: ${{ matrix.environment }}
+
     steps:
       - name: Print ENV (from environment vars)
         run: |
@@ -28,4 +35,34 @@ jobs:
           echo "SECRET=$(echo $SECRET | base64)"
         env:
           SECRET: ${{ secrets.SECRET }}
+
+  # Approval job runs in parallel
+  approve-deployments:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait and Auto-Approve
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_PAT }}
+        run: |
+          # Wait for deployment to be pending
+          sleep 10
+          
+          # Get pending deployments
+          PENDING=$(gh api \
+            /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/pending_deployments \
+            --jq '[.[] | .environment.id]' | tr -d ' ')
+          
+          # Approve if pending
+          echo "PENDING: $PENDING"
+          if [ -n "$PENDING" ]; then
+            gh api \
+              /repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/pending_deployments \
+              --input - <<< "{
+              \"environment_ids\": $PENDING,
+              \"state\": \"approved\",
+              \"comment\": \"Run tests!\"
+            }"
+          fi
+
 
