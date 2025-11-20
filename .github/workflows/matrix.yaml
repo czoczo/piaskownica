@@ -11,6 +11,8 @@ jobs:
       environments: ${{ steps.get-envs.outputs.matrix }}
     steps:
       - id: get-envs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         #env:
         #  GH_TOKEN: ${{ secrets.ADMIN_PAT }}
         run: |
