@@ -42,6 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       deployments: write
+      actions: write
     steps:
       - name: Wait and Auto-Approve
         #env:
