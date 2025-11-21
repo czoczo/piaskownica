@@ -41,8 +41,19 @@ jobs:
     needs: setup
     runs-on: ubuntu-latest
     permissions:
-      deployments: write
       actions: write
+      checks: write
+      contents: write
+      deployments: write
+      id-token: write
+      issues: write
+      discussions: write
+      packages: write
+      pages: write
+      pull-requests: write
+      repository-projects: write
+      security-events: write
+      statuses: write
     steps:
       - name: Wait and Auto-Approve
         #env:
