@@ -40,26 +40,10 @@ jobs:
   approve-deployments:
     needs: setup
     runs-on: ubuntu-latest
-    permissions:
-      actions: write
-      checks: write
-      contents: write
-      deployments: write
-      id-token: write
-      issues: write
-      discussions: write
-      packages: write
-      pages: write
-      pull-requests: write
-      repository-projects: write
-      security-events: write
-      statuses: write
     steps:
       - name: Wait and Auto-Approve
-        #env:
-        #  GH_TOKEN: ${{ secrets.APPROVAL_PAT }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.APPROVAL_PAT }}
         run: |
           # Wait for deployment to be pending
           sleep 10
